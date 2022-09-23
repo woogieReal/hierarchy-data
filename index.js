@@ -1,5 +1,5 @@
 class HierarchyData {
-  constructor(idKeyName, parentIdKeyName) {
+  constructor(idKeyName = id, parentIdKeyName = parentId) {
     this.idKeyName = idKeyName;
     this.parentIdKeyName = parentIdKeyName;
   }
