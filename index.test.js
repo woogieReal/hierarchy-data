@@ -1,4 +1,4 @@
-import HierarchyData from './index';
+const HierarchyData = require('./index.js');
 
 describe('getUniqueKey()', () => {
   describe('success', () => {

@@ -1,4 +1,4 @@
-export default class HierarchyData {
+class HierarchyData {
   constructor(uniqueKey, parentKey) {
     this.uniqueKey = uniqueKey;
     this.parentKey = parentKey;
@@ -12,3 +12,5 @@ export default class HierarchyData {
     return this.parentKey;
   }
 }
+
+module.exports = HierarchyData;
