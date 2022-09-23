@@ -1,14 +1,14 @@
 const HierarchyData = require('./index.js');
 
-describe('getUniqueKey()', () => {
+describe('getKey()', () => {
   describe('success', () => {
-    test('return uniqueKey', () => {
-      const uniqueKey = 'id';
+    test('return key', () => {
+      const key = 'id';
       const parentKey = 'parentId';
     
-      const hierarchyData = new HierarchyData(uniqueKey, parentKey);
+      const hierarchyData = new HierarchyData(key, parentKey);
 
-      expect(hierarchyData.getUniqueKey()).toBe(uniqueKey);
+      expect(hierarchyData.getKey()).toBe(key);
     });
   })
 })
@@ -16,10 +16,10 @@ describe('getUniqueKey()', () => {
 describe('getParentKey()', () => {
   describe('success', () => {
     test('return parentKey', () => {
-      const uniqueKey = 'id';
+      const key = 'id';
       const parentKey = 'parentId';
     
-      const hierarchyData = new HierarchyData(uniqueKey, parentKey);
+      const hierarchyData = new HierarchyData(key, parentKey);
 
       expect(hierarchyData.getParentKey()).toBe(parentKey);
     });

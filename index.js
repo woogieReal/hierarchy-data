@@ -1,11 +1,11 @@
 class HierarchyData {
-  constructor(uniqueKey, parentKey) {
-    this.uniqueKey = uniqueKey;
+  constructor(key, parentKey) {
+    this.key = key;
     this.parentKey = parentKey;
   }
   
-  getUniqueKey() {
-    return this.uniqueKey;
+  getKey() {
+    return this.key;
   }
   
   getParentKey() {
