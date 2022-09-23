@@ -1,28 +1,23 @@
 const HierarchyData = require('./index.js');
 const mockData = require('./mockData.js');
 
+const idKeyName = 'id';
+const parentIdKeyName = 'parentId';
+
+const hierarchyData = new HierarchyData(idKeyName, parentIdKeyName);
+
 describe('getKey()', () => {
   describe('success', () => {
-    test('return key', () => {
-      const key = 'id';
-      const parentKey = 'parentId';
-    
-      const hierarchyData = new HierarchyData(key, parentKey);
-
-      expect(hierarchyData.getKey()).toBe(key);
+    test('return idKeyName', () => {
+      expect(hierarchyData.getIdKeyName()).toBe(idKeyName);
     });
   })
 })
 
 describe('getParentKey()', () => {
   describe('success', () => {
-    test('return parentKey', () => {
-      const key = 'id';
-      const parentKey = 'parentId';
-    
-      const hierarchyData = new HierarchyData(key, parentKey);
-
-      expect(hierarchyData.getParentKey()).toBe(parentKey);
+    test('return parentIdKeyName', () => {
+      expect(hierarchyData.getParentIdKeyName()).toBe(parentIdKeyName);
     });
   })
 })
