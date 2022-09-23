@@ -1,4 +1,5 @@
 const HierarchyData = require('./index.js');
+const mockData = require('./mockData.js');
 
 describe('getKey()', () => {
   describe('success', () => {
