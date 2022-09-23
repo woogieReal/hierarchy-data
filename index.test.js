@@ -4,7 +4,11 @@ const mockData = require("./mockData.js");
 const idKeyName = "id";
 const parentIdKeyName = "parentId";
 
-const hierarchyData = new HierarchyData(idKeyName, parentIdKeyName);
+const hierarchyData = new HierarchyData({
+  idKeyName: "id",
+  parentIdKeyName: "parentId",
+  childrenKeyName: "children",
+});
 
 describe("HierarchyData", () => {
   describe("getKey()", () => {
