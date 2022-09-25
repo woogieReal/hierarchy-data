@@ -17,7 +17,10 @@ class HierarchyData {
     if (!find) {
       for (let data of datas) {
         if (data.children) {
-          const result = this.findDataById(data[this.childrenKeyName], targetId);
+          const result = this.findDataById(
+            data[this.childrenKeyName],
+            targetId
+          );
           if (result) {
             return result;
           }
@@ -68,6 +71,36 @@ class HierarchyData {
     }
 
     return paths;
+  };
+
+  findIndexById = (datas, targetId) => {
+    let parentData;
+    let childrenData;
+    let targetIndex = 0;
+
+    const targetData = this.findDataById(datas, targetId);
+
+    if (!targetData) {
+      return -1;
+    }
+
+    const parentId = targetData[this.parentIdKeyName];
+    if (parentId) {
+      parentData = this.findDataById(datas, parentId);
+
+      if (parentData) {
+        childrenData = parentData[this.childrenKeyName];
+      } else {
+        childrenData = datas;
+      }
+    } else {
+      childrenData = datas;
+    }
+
+    childrenData.forEach((data, index) => {
+      data[this.idKeyName] === targetId && (targetIndex = index);
+    });
+    return targetIndex;
   };
 }
 

@@ -7,7 +7,9 @@ const hierarchyData = new HierarchyData({
   childrenKeyName: "children",
 });
 
+const NOT_FOUND_DATA_ID = 99999999999;
 let targetData;
+let targetDataDepth1;
 
 describe("HierarchyData", () => {
   beforeEach(() => {
@@ -16,6 +18,14 @@ describe("HierarchyData", () => {
       type: 20,
       name: "CASE",
       parent: 1130,
+      children: null,
+    };
+
+    targetDataDepth1 = {
+      id: 375,
+      type: 10,
+      name: "mysql",
+      parent: 76,
       children: null,
     };
   });
@@ -28,7 +38,7 @@ describe("HierarchyData", () => {
     });
 
     test("return null when not found", () => {
-      expect(hierarchyData.findDataById(mockData, "not_found_id")).toEqual(
+      expect(hierarchyData.findDataById(mockData, NOT_FOUND_DATA_ID)).toEqual(
         null
       );
     });
@@ -57,6 +67,20 @@ describe("HierarchyData", () => {
         "Compound Statement",
         "Flow Control Statements",
       ]);
+    });
+  });
+
+  describe("findIndexById()", () => {
+    test("return data index in parent's children array", () => {
+      expect(hierarchyData.findIndexById(mockData, targetData.id)).toBe(0);
+    });
+    
+    test("return data index when target data's depth is 1", () => {
+      expect(hierarchyData.findIndexById(mockData, targetDataDepth1.id)).toBe(2);
+    });
+
+    test("return -1 when target data is not found", () => {
+      expect(hierarchyData.findIndexById(mockData, NOT_FOUND_DATA_ID)).toBe(-1);
     });
   });
 });
