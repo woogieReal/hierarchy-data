@@ -27,6 +27,27 @@ class HierarchyData {
 
     return null;
   };
+
+  findAndUpdateData = (datas, targetData) => {
+    let find = false;
+    for (let i = 0; i < datas.length; i++) {
+      if (datas[i].id === targetData.id) {
+        find = true;
+        datas[i] = targetData;
+      }
+    }
+
+    if (find) {
+      return datas;
+    } else {
+      for (let tree of datas) {
+        if (tree.children) {
+          tree.children = this.findAndUpdateData(tree.children, targetData);
+        }
+      }
+      return datas;
+    }
+  };
 }
 
 module.exports = HierarchyData;
