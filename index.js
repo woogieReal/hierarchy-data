@@ -5,14 +5,6 @@ class HierarchyData {
     this.childrenKeyName = childrenKeyName;
   }
 
-  getIdKeyName() {
-    return this.idKeyName;
-  }
-
-  getParentIdKeyName() {
-    return this.parentIdKeyName;
-  }
-
   findDataById = (datas, key) => {
     let find = false;
     for (let i = 0; i < datas.length; i++) {
