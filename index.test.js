@@ -1,11 +1,12 @@
 const HierarchyData = require("./index.js");
 const mockData = require("./mockData.js");
 
-const hierarchyData = new HierarchyData({
-  idKeyName: "id",
-  parentIdKeyName: "parent",
-  childrenKeyName: "children",
-});
+const hierarchyOption = {
+  idKeyName: "treeId",
+  parentIdKeyName: "parentTreeId",
+  childrenKeyName: "childrenTree",
+};
+const hierarchyData = new HierarchyData(hierarchyOption);
 
 const NOT_FOUND_DATA_ID = 99999999999;
 let targetData;
@@ -14,27 +15,30 @@ let targetDataDepth1;
 describe("HierarchyData", () => {
   beforeEach(() => {
     targetData = {
-      id: 1131,
+      treeId: 1131,
       type: 20,
       name: "CASE",
-      parent: 1130,
-      children: null,
+      parentTreeId: 1130,
+      childrenTree: null,
     };
 
     targetDataDepth1 = {
-      id: 375,
+      treeId: 375,
       type: 10,
       name: "mysql",
-      parent: 76,
-      children: null,
+      parentTreeId: null,
+      childrenTree: null,
     };
   });
 
   describe("findDataById()", () => {
     test("return data by id", () => {
-      expect(hierarchyData.findDataById(mockData, targetData.id)).toEqual(
-        targetData
-      );
+      expect(
+        hierarchyData.findDataById(
+          mockData,
+          targetData[hierarchyOption.idKeyName]
+        )
+      ).toEqual(targetData);
     });
 
     test("return null when not found", () => {
@@ -53,7 +57,7 @@ describe("HierarchyData", () => {
       );
       const updatedData = hierarchyData.findDataById(
         updatedDatas,
-        targetData.id
+        targetData[hierarchyOption.idKeyName]
       );
       expect(updatedData.name).toEqual(targetData.name);
     });
@@ -61,7 +65,12 @@ describe("HierarchyData", () => {
 
   describe("findDataPathById()", () => {
     test("return data path", () => {
-      expect(hierarchyData.findDataPathById(mockData, targetData.id)).toEqual([
+      expect(
+        hierarchyData.findDataPathById(
+          mockData,
+          targetData[hierarchyOption.idKeyName]
+        )
+      ).toEqual([
         "mysql",
         "구문분석",
         "Compound Statement",
@@ -72,11 +81,21 @@ describe("HierarchyData", () => {
 
   describe("findIndexById()", () => {
     test("return data index in parent's children array", () => {
-      expect(hierarchyData.findIndexById(mockData, targetData.id)).toBe(0);
+      expect(
+        hierarchyData.findIndexById(
+          mockData,
+          targetData[hierarchyOption.idKeyName]
+        )
+      ).toBe(0);
     });
-    
+
     test("return data index when target data's depth is 1", () => {
-      expect(hierarchyData.findIndexById(mockData, targetDataDepth1.id)).toBe(2);
+      expect(
+        hierarchyData.findIndexById(
+          mockData,
+          targetDataDepth1[hierarchyOption.idKeyName]
+        )
+      ).toBe(2);
     });
 
     test("return -1 when target data is not found", () => {
