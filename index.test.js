@@ -1,12 +1,9 @@
 const HierarchyData = require("./index.js");
 const mockData = require("./mockData.js");
 
-const idKeyName = "id";
-const parentIdKeyName = "parentId";
-
 const hierarchyData = new HierarchyData({
   idKeyName: "id",
-  parentIdKeyName: "parentId",
+  parentIdKeyName: "parent",
   childrenKeyName: "children",
 });
 
@@ -49,6 +46,17 @@ describe("HierarchyData", () => {
         targetData.id
       );
       expect(updatedData.name).toEqual(targetData.name);
+    });
+  });
+
+  describe("findDataPathById()", () => {
+    test("return data path", () => {
+      expect(hierarchyData.findDataPathById(mockData, targetData.id)).toEqual([
+        "mysql",
+        "구문분석",
+        "Compound Statement",
+        "Flow Control Statements",
+      ]);
     });
   });
 });

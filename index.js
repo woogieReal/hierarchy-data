@@ -5,10 +5,10 @@ class HierarchyData {
     this.childrenKeyName = childrenKeyName;
   }
 
-  findDataById = (datas, key) => {
+  findDataById = (datas, targetId) => {
     let find = false;
     for (let i = 0; i < datas.length; i++) {
-      if (datas[i][this.idKeyName] === key) {
+      if (datas[i][this.idKeyName] === targetId) {
         find = true;
         return datas[i];
       }
@@ -17,7 +17,7 @@ class HierarchyData {
     if (!find) {
       for (let data of datas) {
         if (data.children) {
-          const result = this.findDataById(data[this.childrenKeyName], key);
+          const result = this.findDataById(data[this.childrenKeyName], targetId);
           if (result) {
             return result;
           }
@@ -47,6 +47,27 @@ class HierarchyData {
       }
       return datas;
     }
+  };
+
+  findDataPathById = (datas, targetId) => {
+    const paths = [];
+    const targetData = this.findDataById(datas, targetId);
+
+    if (!targetData) {
+      return [];
+    }
+
+    let parentId = targetData[this.parentIdKeyName];
+
+    while (parentId) {
+      const parentData = this.findDataById(datas, parentId);
+      if (!parentData) break;
+
+      paths.unshift(parentData.name);
+      parentId = parentData.parent;
+    }
+
+    return paths;
   };
 }
 
