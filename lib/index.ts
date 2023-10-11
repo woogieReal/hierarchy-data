@@ -1,7 +1,1 @@
-export default class HierarchyData {
-  constructor() {}
-
-  test = () => {
-    return true;
-  }
-}
+const findup = require('findup-sync');
