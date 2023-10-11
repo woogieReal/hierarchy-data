@@ -8,18 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/woogie-real/hierarchy-data.git"
+    "url": "git+https://github.com/woogieReal/hierarchy-data.git"
   },
   "keywords": [
     "hierarchy",
     "tree"
   ],
-  "author": "woogie-real",
+  "author": "woogieReal",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/woogie-real/hierarchy-data/issues"
+    "url": "https://github.com/woogieReal/hierarchy-data/issues"
   },
-  "homepage": "https://github.com/woogie-real/hierarchy-data#readme",
+  "homepage": "https://github.com/woogieReal/hierarchy-data#readme",
   "devDependencies": {
     "jest": "^29.0.3"
   }
