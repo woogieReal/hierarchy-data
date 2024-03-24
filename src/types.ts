@@ -22,3 +22,5 @@ export interface ChildTree extends CommonTree {
   path: string;
   children?: ChildTree[];
 }
+
+export declare function getConfig(): Config;
