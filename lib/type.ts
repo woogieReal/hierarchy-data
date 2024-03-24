@@ -1,5 +1,5 @@
-export interface HierarchyDataInstance {
-  pathSeparator: string;
+export type Config = {
+  [key: string]: string;
 }
 
 export type TreeType = "root" | "child";
