@@ -1,6 +1,30 @@
 import findup from 'findup-sync';
 import fs from 'fs';
-import { Config } from './type';
+
+export type Config = {
+  [key: string]: string;
+}
+
+export type TreeType = "root" | "child";
+
+export interface CommonTree {
+  type: TreeType;
+  [key: string]: any;
+}
+
+export interface RootTree extends CommonTree {
+  type: "root";
+  children: ChildTree[];
+}
+
+export interface ChildTree extends CommonTree {
+  type: "child";
+  id: string | number;
+  name: string;
+  content?: any;
+  path: string;
+  children?: ChildTree[];
+}
 
 export const getConfig = (): Config => {
   const configFileFullPath = findup('hierarchy-data.json');
