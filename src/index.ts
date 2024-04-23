@@ -1,5 +1,5 @@
-import * as config from "./config";
+import * as hierarchyConfig from "./config";
 
-export default {
-  config,
+export {
+  hierarchyConfig,
 }

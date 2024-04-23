@@ -1,8 +1,8 @@
 import findup from 'findup-sync';
 import fs from 'fs';
-import { Config } from './types';
+import { HierarchyConfig } from './types';
 
-export const getConfig = (): Config => {
+export const getConfig = (): HierarchyConfig => {
   const configFileFullPath = findup('hierarchy-data.json');
 
   if (!configFileFullPath) {
@@ -10,7 +10,7 @@ export const getConfig = (): Config => {
   }
   
   const jsonContents = fs.readFileSync(configFileFullPath).toString();
-  const confjg: Config = JSON.parse(jsonContents);
+  const confjg: HierarchyConfig = JSON.parse(jsonContents);
 
   return confjg;
 }

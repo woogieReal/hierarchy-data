@@ -1,4 +1,4 @@
-export type Config = {
+export type HierarchyConfig = {
   [key: string]: string;
 }
 
