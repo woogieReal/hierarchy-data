@@ -2,20 +2,23 @@ export type HierarchyConfig = {
   [key: string]: string;
 }
 
-export type TreeType = "root" | "child";
+export type TreeType = "directory" | "file";
 
 export interface CommonTree {
+  isRoot: boolean;
   type: TreeType;
   [key: string]: any;
 }
 
 export interface RootTree extends CommonTree {
-  type: "root";
+  isRoot: true;
+  type: "directory";
   children: ChildTree[];
 }
 
 export interface ChildTree extends CommonTree {
-  type: "child";
+  isRoot: false;
+  type: "file";
   id: string | number;
   name: string;
   content?: any;
