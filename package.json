@@ -4,7 +4,7 @@
   "description": "handle hierarchy data easily",
   "main": "lib/index.js",
   "scripts": {
-    "build": "tsc --project tsconfig.json",
+    "build": "rm -rf ./lib && tsc --project tsconfig.json",
     "test": "jest"
   },
   "repository": {
