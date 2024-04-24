@@ -1,23 +1,10 @@
-import {
-  TreeType,
-  CommonTree,
-  RootTree,
-  ChildTree,
-} from '../../types';
+import { BasicTree, ChildTree } from '../../types';
+import { getTreeDepth } from './treeUtil';
 
-import { checkEmptyValue } from '../common/commonUtil';
-// import { getTreeDepth } from './treeUtil';
-
-type CheckTreeFn = (targetTree: CommonTree) => boolean;
-type CheckCompareTreesFn = (firstTree: CommonTree, secondTree: CommonTree) => boolean;
+type CheckTreeFn = (targetTree: BasicTree) => boolean;
+type CheckCompareTreesFn = (firstTree: ChildTree, secondTree: ChildTree) => boolean;
 
 export const checkRootTree: CheckTreeFn = tree => tree.isRoot;
 export const checkDirectoryTree: CheckTreeFn = tree => tree.type === 'directory';
 export const checkFileTree: CheckTreeFn = tree => tree.type === 'file';
-
-// export const checkSameTreeDepth: CheckCompareTreesFn = (firstTree, secondTree) => {
-//   return (
-//     getTreeDepth(firstTree) === getTreeDepth(secondTree)
-//     && checkInitalRootTree(firstTree) === checkInitalRootTree(secondTree)
-//   );
-// }
+export const checkSameTreeDepth: CheckCompareTreesFn = (firstTree, secondTree) => getTreeDepth(firstTree) === getTreeDepth(secondTree);
