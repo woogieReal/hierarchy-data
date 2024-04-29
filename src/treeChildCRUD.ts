@@ -4,8 +4,8 @@ import _ from 'lodash';
 import { getEmptyArrayIfNotArray } from './utils/common/arrayUtil';
 import { sortingTreeByTreeName } from './utils/tree/treeUtil';
 
-type CUDFromParentFn = <T1 extends RootTree | ChildTree>(parentTree: T1, childTree: ChildTree) => T1;
-type RFromParentFn = <T1 extends RootTree | ChildTree>(parentTree: T1, childTreeId: number | string) => ChildTree | undefined;
+type CUDFromParentFn = (parentTree: RootTree | ChildTree, childTree: ChildTree) => RootTree | ChildTree;
+type RFromParentFn = (parentTree: RootTree | ChildTree, childTreeId: number | string) => ChildTree | undefined;
 
 export const addChildToParent: CUDFromParentFn = (parentTree, childTree) => {
   const copyParentTree = _.cloneDeep(parentTree);
