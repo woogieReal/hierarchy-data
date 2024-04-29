@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { checkRootTree, checkDirectoryTree, checkFileTree, checkSameTreeDepth } from './treeCheck';
-import { BasicTree, ChildTree } from "../../types";
+import { BasicTree, ChildTree, RootTree } from "../../types";
 
 describe("treeCheck", () => {
   describe("checkRootTree", () => {
@@ -64,6 +64,21 @@ describe("treeCheck", () => {
   });
 
   describe("checkSameTreeDepth", () => {
+    test("return true, if given trees are root tree", () => {
+      const firstTree: RootTree = {
+        isRoot: true,
+        type: "directory",
+        children: []
+      }
+      const secondTree: RootTree = {
+        isRoot: true,
+        type: "directory",
+        children: [],
+      }
+      const res = checkSameTreeDepth(firstTree, secondTree);
+      expect(res).toBe(true);
+    });
+
     test("return true, if given trees are same depth", () => {
       const firstTree: ChildTree = {
         isRoot: false,
@@ -83,6 +98,24 @@ describe("treeCheck", () => {
       }
       const res = checkSameTreeDepth(firstTree, secondTree);
       expect(res).toBe(true);
+    });
+
+    test("return true, if one of the given trees is root tree", () => {
+      const firstTree: RootTree = {
+        isRoot: true,
+        type: "directory",
+        children: []
+      }
+      const secondTree: ChildTree = {
+        isRoot: false,
+        type: "file",
+        id: 20,
+        name: 'first tree',
+        content: 'first tree content',
+        path: '',
+      }
+      const res = checkSameTreeDepth(firstTree, secondTree);
+      expect(res).toBe(false);
     });
 
     test("return false, if given trees are not same depth", () => {
