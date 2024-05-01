@@ -1,7 +1,7 @@
 import { Tree } from '../../types';
 import _ from 'lodash';
 import { getEmptyArrayIfNotArray } from '../common/arrayUtil';
-import { getTreeDepth, getTreePathArray, createTempRootTree, sortingTreeByTreeName } from './treeUtil';
+import { getTreeDepth, getTreePathArray, sortingTreeByTreeName } from './treeUtil';
 
 export const createDepthToTreesMap = <T extends Tree>(trees: T[]): Map<number, T[]> => {
   const depthToTree = new Map<number, T[]>();
