@@ -1,6 +1,6 @@
 {
   "name": "hierarchy-data",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "handle hierarchy data easily",
   "main": "lib/index.js",
   "scripts": {
