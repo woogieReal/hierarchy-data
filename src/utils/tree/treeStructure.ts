@@ -1,15 +1,15 @@
-import { RootTree, ChildTree } from '../../types';
+import { Tree } from '../../types';
 import _ from 'lodash';
 import { getEmptyArrayIfNotArray } from '../common/arrayUtil';
-import { getTreeDepth, getTreePathArray, createInitialRootTree, sortingTreeByTreeName } from './treeUtil';
+import { getTreeDepth, getTreePathArray, createTempRootTree, sortingTreeByTreeName } from './treeUtil';
 
-export const createDepthToTreesMap = (trees: ChildTree[]): Map<number, ChildTree[]> => {
-  const depthToTree = new Map<number, ChildTree[]>();
+export const createDepthToTreesMap = <T extends Tree>(trees: T[]): Map<number, T[]> => {
+  const depthToTree = new Map<number, T[]>();
 
   const maxDepthTree = _.maxBy(trees, getTreeDepth)
   const maxDepth = maxDepthTree ? getTreeDepth(maxDepthTree) : 0;
 
-  for (let i = 0; i <= maxDepth; i++) {
+  for (let i = 1; i <= maxDepth; i++) {
     const iDepthTrees = _
       .chain(trees)
       .filter((tree) => getTreeDepth(tree) === i)
@@ -21,17 +21,18 @@ export const createDepthToTreesMap = (trees: ChildTree[]): Map<number, ChildTree
   return depthToTree;
 }
 
-export const makeTreeStructure = (depthToTreesMap: Map<number, ChildTree[]>): RootTree => {
-  const treeStructureMap = new Map<number, ChildTree[]>();
+export const makeTreeStructure = <T extends Tree>(depthToTreesMap: Map<number, T[]>): T[] => {
+  const treeStructureMap = new Map<number, T[]>();
   const maxDepth = _.maxBy(Array.from(depthToTreesMap.keys())) || 0;
 
-  for (let i = 1; i <= maxDepth; i++) {
-    const childTrees: ChildTree[] = depthToTreesMap.get(i) || [];
-    const parentTrees: ChildTree[] = depthToTreesMap.get(i - 1) || [];
+  for (let i = 1; i < maxDepth; i++) {
+    const childTrees: T[] = depthToTreesMap.get(i + 1) || [];
+    const parentTrees: T[] = depthToTreesMap.get(i) || [];
 
-    childTrees.forEach((child: ChildTree) => {
-      const parentTreeId = getTreePathArray(child.path).pop();
-      const parentTree = parentTrees.find((parent) => String(parent.id) === String(parentTreeId));
+    childTrees.forEach((child: T) => {
+      const childTreePaths = getTreePathArray(child.path);
+      const parentTreeId = childTreePaths[childTreePaths.length-2];
+      const parentTree = parentTrees.find((parent) => parent.id === parentTreeId);
 
       if (parentTree) {
         parentTree.children = getEmptyArrayIfNotArray(parentTree.children);
@@ -39,23 +40,21 @@ export const makeTreeStructure = (depthToTreesMap: Map<number, ChildTree[]>): Ro
       }
     });
 
-    treeStructureMap.set(i - 1, parentTrees);    
+    treeStructureMap.set(i, parentTrees);    
   }
 
-  return { ...createInitialRootTree(), children: treeStructureMap.get(0) || [] };
+  return treeStructureMap.get(1) || [];
 }
 
-export const sortingTreeFromRootToLeef = <T extends RootTree | ChildTree>(tree: T): T => {
-  const copyTree = _.cloneDeep(tree);
-
-  if (copyTree.type === 'directory') {
-    copyTree.children = getEmptyArrayIfNotArray(copyTree.children);
-    copyTree.children.sort(sortingTreeByTreeName);
-  
-    copyTree.children.forEach((child, idx, children) => children[idx] = sortingTreeFromRootToLeef(child));
-  }
-
-  return copyTree;
+export const sortingTreeFromRootToLeef = <T extends Tree>(trees: T[]): T[] => {
+  const copyTrees = _.cloneDeep(trees);
+  copyTrees.forEach((t, i, list) => {
+    if (!!t.children?.length) {
+      t.children.sort(sortingTreeByTreeName);
+      list[i].children = sortingTreeFromRootToLeef(t.children || [])
+    }
+  });
+  return copyTrees;
 }
 
 export const createTreeStructureFromTrees = _.flow([

@@ -8,36 +8,30 @@ import {
   addChildToParentCR,
   removeChildFromParentCR,
 } from "./treeChildCRUD";
-import { ChildTree } from "./types";
+import { Tree } from "./types";
 
 describe("treeChildCRUD", () => {
-  let fileTree1: ChildTree;
-  let fileTree2: ChildTree;
-  let directoryTree: ChildTree;
+  let fileTree1: Tree;
+  let fileTree2: Tree;
+  let directoryTree: Tree;
 
   beforeEach(() => {
     fileTree1 = {
-      isRoot: false,
-      type: 'file',
-      id: 20,
+      id: '20',
       name: 'bbb',
       content: null,
-      path: '10',
+      path: '10|20',
     };
     fileTree2 = {
-      isRoot: false,
-      type: 'file',
-      id: 30,
+      id: '30',
       name: 'aaa',
       content: null,
-      path: '10',
+      path: '10|30',
     };
     directoryTree = {
-      isRoot: false,
-      type: 'directory',
-      id: 10,
+      id: '10',
       name: 'directory',
-      path: '',
+      path: '10',
       children: []
     };
   })
@@ -68,7 +62,7 @@ describe("treeChildCRUD", () => {
 
   describe("findChildFromParentById", () => {
     test("return undefined when searching tree does not exist in parent tree", () => {
-      const result = findChildFromParentById(directoryTree, 999);
+      const result = findChildFromParentById(directoryTree, '999');
       const expectValue: ReturnType<typeof findChildFromParentById> = undefined;
       expect(result).toStrictEqual(expectValue);
     });
@@ -78,7 +72,7 @@ describe("treeChildCRUD", () => {
         ...directoryTree,
         children: [fileTree2, fileTree1]
       }
-      const result = findChildFromParentById(directoryTree, 20);
+      const result = findChildFromParentById(directoryTree, '20');
       const expectValue: ReturnType<typeof findChildFromParentById> = fileTree1;
       expect(result).toStrictEqual(expectValue);
     });

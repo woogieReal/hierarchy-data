@@ -1,48 +1,37 @@
-import { RootTree, ChildTree } from '../../types';
+import { Tree } from '../../types';
 import _ from 'lodash';
 
-const InitialRootTree: RootTree = {
-  isRoot: true,
-  type: "directory",
+const TEMP_ROOT_TREE: Tree = {
+  id: '',
+  name: '',
+  content: '',
+  path: '',
   children: [],
 }
 
-export const createInitialRootTree = _.constant(InitialRootTree);
+export const createTempRootTree = _.constant(TEMP_ROOT_TREE);
 
-export const createTreeFullPath = (tree: ChildTree): string => {
-  return tree.path
-    ? tree.path + '|' + tree.id
-    : String(tree.id);
-};
+export const getTreeDepth = <T extends Tree>(tree: T): number => getTreePathArray(tree.path).length;
 
-export const getTreeDepth = (tree: ChildTree): number => {
-  return getTreePathArray(tree.path).length;
-}
-
-export const getTreePathArray = (path: string): number[] | string[] => {
+export const getTreePathArray = (path: string): string[] => {
   return path
     .split('|')
     .filter(path => !!path);
 }
 
-export const sortingTreeByTreeName = (a: ChildTree, b: ChildTree) => {
-  const aTypeToNumber = a.type === 'directory' ? 0 : 1;
-  const bTypeToNumber = b.type === 'directory' ? 0 : 1;
+export const sortingTreeByTreeName = <T extends Tree>(a: T, b: T) => {
+  const nameA = a.name;
+  const nameB = b.name;
 
-  if (aTypeToNumber < bTypeToNumber) {
+  if (nameA < nameB) {
     return -1;
-  } else if (aTypeToNumber > bTypeToNumber) {
+  } else if (nameA > nameB) {
     return 1;
   } else {
-    const nameA = a.name;
-    const nameB = b.name;
-
-    if (nameA < nameB) {
-      return -1;
-    } else if (nameA > nameB) {
-      return 1;
-    } else {
-      return 0;
-    }
+    return 0;
   }
 };
+
+export const checkSameTreeDepth = <T extends Tree>(firstTree: T, secondTree: T): boolean => {
+  return getTreeDepth(firstTree) === getTreeDepth(secondTree);
+}

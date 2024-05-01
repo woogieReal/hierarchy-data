@@ -1,11 +1,10 @@
-import { RootTree, ChildTree } from './types';
+import { Tree } from './types';
 import { pipe } from 'fp-ts/lib/function';
 import _ from 'lodash';
 import { getEmptyArrayIfNotArray } from './utils/common/arrayUtil';
 import { sortingTreeByTreeName } from './utils/tree/treeUtil';
 
-type CUDFromParentFn = (parentTree: RootTree | ChildTree, childTree: ChildTree) => RootTree | ChildTree;
-type RFromParentFn = (parentTree: RootTree | ChildTree, childTreeId: number | string) => ChildTree | undefined;
+type CUDFromParentFn = <T extends Tree>(parentTree: T, childTree: T) => T;
 
 export const addChildToParent: CUDFromParentFn = (parentTree, childTree) => {
   const copyParentTree = _.cloneDeep(parentTree);
@@ -17,7 +16,9 @@ export const addChildToParent: CUDFromParentFn = (parentTree, childTree) => {
   return copyParentTree;
 }
 
-export const findChildFromParentById: RFromParentFn = (parentTree, childTreeId) => _.find(parentTree.children, { 'id': childTreeId });
+export const findChildFromParentById = <T extends Tree>(parentTree: T, childTreeId: string): T | undefined => {
+  return _.find(parentTree.children, { 'id': childTreeId }) as T;
+}
 
 export const replaceChildFromParent: CUDFromParentFn = (parentTree, childTree) => pipe(
   parentTree,
