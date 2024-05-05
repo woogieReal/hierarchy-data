@@ -1,25 +1,28 @@
 import { describe, expect, test } from "@jest/globals";
 import { findTreeFromUpper } from "./treeCRUD";
-import { MOCK_FLAT_TREES, MOCK_HIERARCHY_TREES, TREE_5 } from "./utils/mock/data";
+import { MOCK_FLAT_TREES, MOCK_HIERARCHY_TREES, TREE_3, TREE_5 } from "./utils/mock/data";
 import { cloneDeep } from "lodash";
 import { getTreePathArray } from "./utils/tree/treeUtil";
 
 describe("treeCRUD", () => {
   describe("findTreeFromUpper", () => {
-    test("targetTree의 depth가 1일 때", () => {
+    test("retrun undefined if target tree does not exist", () => {
+      const result = findTreeFromUpper(MOCK_HIERARCHY_TREES, 'NOT_EXISTS');
+      const expectValue: ReturnType<typeof findTreeFromUpper> = undefined;
+      expect(result).toStrictEqual(expectValue);
+    });
+
+    test("retrun tree if target tree's depth is 1", () => {
+      const result = findTreeFromUpper(MOCK_HIERARCHY_TREES, '3');
+      const expectValue: ReturnType<typeof findTreeFromUpper> = TREE_3;
+      expect(result).toStrictEqual(expectValue);
+    });
+
+    test("retrun tree if target tree's depth is 2", () => {
       const result = findTreeFromUpper(MOCK_HIERARCHY_TREES, '4|5');
       const expectValue: ReturnType<typeof findTreeFromUpper> = TREE_5;
       expect(result).toStrictEqual(expectValue);
     });
-  
-    // test("targetTree의 depth가 n일 때", () => {
-    //   const res = findTreeFromUpper(MOCK_TREE_DATA, getTreePathArray(DEPTH_3_TREE.treePath));
-
-    //   const targetTree = cloneDeep(DEPTH_3_TREE);
-    //   const [ parentId1, parentId2 ] = targetTree.treePath.split('|').map(Number);
-
-    //   expect(res && res.treeId).toBe(parentId2);
-    // });
   });
 
   // describe("addTreeToUpper", () => {
