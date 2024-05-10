@@ -35,3 +35,9 @@ export const sortingTreeByTreeName = <T extends Tree>(a: T, b: T) => {
 export const checkSameTreeDepth = <T extends Tree>(firstTree: T, secondTree: T): boolean => {
   return getTreeDepth(firstTree) === getTreeDepth(secondTree);
 }
+
+export const getTreeParentPath = <T extends Tree>(tree: T): string => {
+  const treePathArr = getTreePathArray(tree.path);
+  const parentPathArr = treePathArr.slice(0, treePathArr.length - 1);
+  return parentPathArr.join('|');
+}

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { checkSameTreeDepth, createTempRootTree, getTreeDepth, getTreePathArray, sortingTreeByTreeName } from './treeUtil';
+import { checkSameTreeDepth, createTempRootTree, getTreeDepth, getTreeParentPath, getTreePathArray, sortingTreeByTreeName } from './treeUtil';
 import { Tree } from "../../types";
 
 describe("treeUtil", () => {
@@ -132,6 +132,44 @@ describe("treeUtil", () => {
       }
       const res = checkSameTreeDepth(firstTree, secondTree);
       expect(res).toBe(false);
+    });
+  });
+
+  describe("getTreeParentPath", () => {
+    test("return tree path array when target tree's depth is 1", () => {
+      const tree: Tree = {
+        id: '10',
+        name: 'tree',
+        content: 'tree content',
+        path: '10',
+      }
+      const result = getTreeParentPath(tree);
+      const expectValue: ReturnType<typeof getTreeParentPath> = '';
+      expect(result).toStrictEqual(expectValue);
+    });
+
+    test("return tree path array when target tree's depth is 2", () => {
+      const tree: Tree = {
+        id: '20',
+        name: 'tree',
+        content: 'tree content',
+        path: '10|20',
+      }
+      const result = getTreeParentPath(tree);
+      const expectValue: ReturnType<typeof getTreeParentPath> = '10';
+      expect(result).toStrictEqual(expectValue);
+    });
+
+    test("return tree path array when target tree's depth is 3", () => {
+      const tree: Tree = {
+        id: '30',
+        name: 'tree',
+        content: 'tree content',
+        path: '10|20|30',
+      }
+      const result = getTreeParentPath(tree);
+      const expectValue: ReturnType<typeof getTreeParentPath> = '10|20';
+      expect(result).toStrictEqual(expectValue);
     });
   });
 });
