@@ -1,6 +1,6 @@
 import { Tree } from './types';
 import _ from 'lodash';
-import { getTreePathArray, checkSameTreeDepth, createTempRootTree } from './utils/tree/treeUtil';
+import { getTreePathArray, checkSameTreeDepth, createTempRootTree, getTreeParentPath } from './utils/tree/treeUtil';
 import * as O from 'fp-ts/Option'
 import * as E from 'fp-ts/Either'
 import * as B from 'fp-ts/boolean'
@@ -37,22 +37,33 @@ export const findTreeFromUpper = <T extends Tree>(upperTrees: T | T[], path: str
   )
 }
 
-// export const replaceTreeFromUpper: CUDFromRootFn = (upperTree, lowerTree) => pipe(
-//   !checkSameTreeDepth(upperTree, lowerTree),
-//   B.match(
-//     () => _.cloneDeep(lowerTree),
-//     () => pipe(
-//       O.fromNullableK(findTreeFromUpper)(upperTree, getTreePathArray(lowerTree.path)),
-//       O.match(
-//         () => _.cloneDeep(upperTree),
-//         (parentTree) => pipe(
-//           replaceChildFromParent(parentTree, lowerTree),
-//           replaceTreeFromUpperCL(upperTree),
-//         )
-//       )
-//     ),
-//   ),
-// );
+export const replaceTreeFromUpper = <T extends Tree>(upperTrees: T | T[], lowerTree: T): T | T[] => {
+  const trees = _.concat([], _.cloneDeep(upperTrees));
+  const idx = trees.findIndex(tree => tree.id === lowerTree.id);
+
+  return pipe(
+    idx < 0,
+    B.match(
+      () => {
+        trees[idx] = lowerTree;
+        return Array.isArray(upperTrees) ? trees : trees[0];
+      },
+      () => {
+        const parentTreePath = getTreeParentPath(lowerTree);
+        return pipe(
+          O.fromNullableK(findTreeFromUpper)(trees, parentTreePath),
+          O.match(
+            () => Array.isArray(upperTrees) ? trees : trees[0],
+            (parentTree) => {
+              const updatedParent = replaceChildFromParent(parentTree, lowerTree);
+              return replaceTreeFromUpper(upperTrees, updatedParent);
+            },
+          )
+        )
+      },
+    ) as any
+  );
+}
 
 // export const removeTreeFromUpper: CUDFromRootFn = (upperTree, lowerTree) => pipe(
 //   O.fromNullableK(findTreeFromUpper)(upperTree, getTreePathArray(lowerTree.path)),
@@ -66,4 +77,4 @@ export const findTreeFromUpper = <T extends Tree>(upperTrees: T | T[], path: str
 //   )
 // );
 
-// const replaceTreeFromUpperCL = _.curry(replaceTreeFromUpper);
+const replaceTreeFromUpperCL = _.curry(replaceTreeFromUpper);

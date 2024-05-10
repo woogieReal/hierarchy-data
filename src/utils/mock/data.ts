@@ -28,6 +28,28 @@ export const TREE_5: Tree = {
   content: null,
   path: '4|5',
 };
+export const TREE_6: Tree = {
+  id: '6',
+  name: 'directory_3',
+  path: '6',
+};
+export const TREE_7: Tree = {
+  id: '7',
+  name: 'directory_3_1',
+  path: '6|7',
+};
+export const TREE_8: Tree = {
+  id: '8',
+  name: 'file_3_1_1',
+  content: null,
+  path: '6|7|8',
+};
+export const TREE_9: Tree = {
+  id: '9',
+  name: 'file_3_1_2',
+  content: null,
+  path: '6|7|9',
+};
 
 export const MOCK_FLAT_TREES: Tree[] = [
   TREE_1,
@@ -35,6 +57,10 @@ export const MOCK_FLAT_TREES: Tree[] = [
   TREE_3,
   TREE_4,
   TREE_5,
+  TREE_6,
+  TREE_7,
+  TREE_8,
+  TREE_9,
 ];
 
 export const MOCK_HIERARCHY_TREES: Tree[] = [
@@ -45,4 +71,13 @@ export const MOCK_HIERARCHY_TREES: Tree[] = [
     ...TREE_4,
     children: [TREE_5]
   },
+  {
+    ...TREE_6,
+    children: [
+      {
+        ...TREE_7,
+        children: [TREE_8, TREE_9]
+      }
+    ]
+  }
 ]
