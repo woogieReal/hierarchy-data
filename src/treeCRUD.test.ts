@@ -73,7 +73,7 @@ describe("treeCRUD", () => {
 
       const result = replaceTreeFromUpper(MOCK_HIERARCHY_TREES, lowerTree);
       const expectValue: ReturnType<typeof replaceTreeFromUpper> = _.cloneDeep(MOCK_HIERARCHY_TREES);
-      expectValue[2] = lowerTree;
+      expectValue[4] = lowerTree;
 
       expect(result).toStrictEqual(expectValue);
     });
@@ -86,7 +86,7 @@ describe("treeCRUD", () => {
 
       const result = replaceTreeFromUpper(MOCK_HIERARCHY_TREES, lowerTree);
       const expectValue: ReturnType<typeof replaceTreeFromUpper> = _.cloneDeep(MOCK_HIERARCHY_TREES);
-      expectValue[3].children = [lowerTree];
+      expectValue[1].children = [lowerTree];
 
       expect(result).toStrictEqual(expectValue);
     });
@@ -99,7 +99,7 @@ describe("treeCRUD", () => {
 
       const result = replaceTreeFromUpper(MOCK_HIERARCHY_TREES, lowerTree);
       const expectValue: ReturnType<typeof replaceTreeFromUpper> = _.cloneDeep(MOCK_HIERARCHY_TREES);
-      expectValue[4].children = [
+      expectValue[2].children = [
         {
           ...TREE_7,
           children: [TREE_8, lowerTree]
@@ -119,7 +119,7 @@ describe("treeCRUD", () => {
 
       const result = replaceTreeFromUpper(MOCK_HIERARCHY_TREES, lowerTree);
       const expectValue: ReturnType<typeof replaceTreeFromUpper> = _.cloneDeep(MOCK_HIERARCHY_TREES);
-      expectValue[4].children = [
+      expectValue[2].children = [
         {
           ...TREE_7,
           children: [TREE_8, TREE_9, lowerTree]

@@ -65,8 +65,6 @@ export const MOCK_FLAT_TREES: Tree[] = [
 
 export const MOCK_HIERARCHY_TREES: Tree[] = [
   TREE_1,
-  TREE_2,
-  TREE_3,
   {
     ...TREE_4,
     children: [TREE_5]
@@ -79,5 +77,7 @@ export const MOCK_HIERARCHY_TREES: Tree[] = [
         children: [TREE_8, TREE_9]
       }
     ]
-  }
+  },
+  TREE_2,
+  TREE_3,
 ]

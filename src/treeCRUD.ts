@@ -1,6 +1,6 @@
 import { Tree } from './types';
 import _ from 'lodash';
-import { getTreePathArray, checkSameTreeDepth, createTempRootTree, getTreeParentPath } from './utils/tree/treeUtil';
+import { getTreePathArray, checkSameTreeDepth, createTempRootTree, getTreeParentPath, sortingTreeByTreeName } from './utils/tree/treeUtil';
 import * as O from 'fp-ts/Option'
 import * as E from 'fp-ts/Either'
 import * as B from 'fp-ts/boolean'
@@ -46,7 +46,7 @@ export const replaceTreeFromUpper = <T extends Tree>(upperTrees: T | T[], lowerT
     B.match(
       () => {
         trees[idx] = lowerTree;
-        return Array.isArray(upperTrees) ? trees : trees[0];
+        return Array.isArray(upperTrees) ? trees.sort(sortingTreeByTreeName) : trees[0];
       },
       () => {
         const parentTreePath = getTreeParentPath(lowerTree);

@@ -49,6 +49,7 @@ export const makeTreeStructure = <T extends Tree>(depthToTreesMap: Map<number, T
 export const sortingTreeFromRootToLeef = <T extends Tree>(trees: T[]): T[] => {
   const copyTrees = _.cloneDeep(trees);
   copyTrees.forEach((t, i, list) => {
+    copyTrees.sort(sortingTreeByTreeName);
     if (!!t.children?.length) {
       t.children.sort(sortingTreeByTreeName);
       list[i].children = sortingTreeFromRootToLeef(t.children || [])
