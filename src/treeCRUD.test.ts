@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
-import { addTreeToUpper, findTreeFromUpper, replaceTreeFromUpper } from "./treeCRUD";
-import { MOCK_FLAT_TREES, MOCK_HIERARCHY_TREES, TREE_3, TREE_5, TREE_7, TREE_8, TREE_9 } from "./utils/mock/data";
+import { addTreeToUpper, findTreeFromUpper, removeTreeFromUpper, replaceTreeFromUpper } from "./treeCRUD";
+import { MOCK_FLAT_TREES, MOCK_HIERARCHY_TREES, TREE_1, TREE_3, TREE_5, TREE_7, TREE_8, TREE_9 } from "./utils/mock/data";
 import { cloneDeep } from "lodash";
 import { getTreePathArray } from "./utils/tree/treeUtil";
 import { Tree } from "./types";
@@ -135,28 +135,58 @@ describe("treeCRUD", () => {
     });
   });
 
-  // describe("removeTreeFromUpper", () => {
-  //   test("1 depth 제거", () => {
-  //     const targetTree = cloneDeep(DEPTH_1_TREE);
+  describe("removeTreeFromUpper", () => {
+    test("when lowerTree is not found (1)", () => {
+      const lowerTree: Tree = {
+        id: 'NOT_EXISTS',
+        name: 'file_NOT_EXISTS',
+        content: null,
+        path: '6|7|NOT_EXISTS',
+      };
+      const result = removeTreeFromUpper(MOCK_HIERARCHY_TREES, lowerTree);
+      const expectValue: ReturnType<typeof removeTreeFromUpper> = _.cloneDeep(MOCK_HIERARCHY_TREES);
+      expect(result).toStrictEqual(expectValue);
+    })
 
-  //     const res = removeTreeFromUpper(MOCK_TREE_DATA, targetTree);
-  //     const treeIds = res.treeChildren?.map(child => child.treeId);
+    test("when lowerTree is not found (2)", () => {
+      const lowerTree: Tree = {
+        id: 'NOT_EXISTS',
+        name: 'file_3_1_NOT_EXISTS',
+        content: null,
+        path: 'NOT_EXISTS',
+      };
+      const result = removeTreeFromUpper(MOCK_HIERARCHY_TREES, lowerTree);
+      const expectValue: ReturnType<typeof removeTreeFromUpper> = _.cloneDeep(MOCK_HIERARCHY_TREES);
+      expect(result).toStrictEqual(expectValue);
+    });
 
-  //     expect(treeIds).not.toContain(targetTree.treeId);
-  //   });
+    test("when lowerTree is found and depth is 1", () => {
+      const lowerTree: Tree = _.cloneDeep(TREE_1);
+      const result = removeTreeFromUpper(MOCK_HIERARCHY_TREES, lowerTree);
+      const expectValue: ReturnType<typeof removeTreeFromUpper> = _.cloneDeep(MOCK_HIERARCHY_TREES);
+      expectValue.shift();
+      expect(result).toStrictEqual(expectValue);
+    })
 
-  //   test("n depth 제거", () => {
-  //     const targetTree = cloneDeep(DEPTH_3_TREE);
+    test("when lowerTree is found and depth is 2", () => {
+      const lowerTree: Tree = _.cloneDeep(TREE_5);
+      const result = removeTreeFromUpper(MOCK_HIERARCHY_TREES, lowerTree);
+      const expectValue: ReturnType<typeof removeTreeFromUpper> = _.cloneDeep(MOCK_HIERARCHY_TREES);
+      expectValue[1].children = [];
+      expect(result).toStrictEqual(expectValue);
+    })
 
-  //     const res = removeTreeFromUpper(MOCK_TREE_DATA, targetTree);
-
-  //     const [ parentId1, parentId2 ] = targetTree.treePath.split('|').map(Number);
-
-  //     const parentTree1 = res.treeChildren?.find(child => child.treeId === parentId1);
-  //     const parentTree2 = parentTree1?.treeChildren?.find(child => child.treeId === parentId2);
-  //     const treeIds = parentTree2?.treeChildren?.map(child => child.treeId);
-
-  //     expect(treeIds).not.toContain(targetTree.treeId);
-  //   });
-  // });
+    test("when lowerTree is found and depth is 3", () => {
+      const lowerTree: Tree = _.cloneDeep(TREE_9);
+      const result = removeTreeFromUpper(MOCK_HIERARCHY_TREES, lowerTree);
+      const expectValue: ReturnType<typeof removeTreeFromUpper> = _.cloneDeep(MOCK_HIERARCHY_TREES);
+      expectValue[2].children = [
+        {
+          ...TREE_7,
+          children: [TREE_8]
+        }
+      ]
+      expect(result).toStrictEqual(expectValue);
+    })
+  });
 });

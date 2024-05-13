@@ -1,13 +1,10 @@
 import { Tree } from './types';
 import _ from 'lodash';
-import { getTreePathArray, checkSameTreeDepth, createTempRootTree, getTreeParentPath, sortingTreeByTreeName } from './utils/tree/treeUtil';
+import { getTreePathArray, getTreeParentPath, sortingTreeByTreeName } from './utils/tree/treeUtil';
 import * as O from 'fp-ts/Option'
-import * as E from 'fp-ts/Either'
 import * as B from 'fp-ts/boolean'
 import { pipe } from 'fp-ts/function'
-import { addChildToParent, addChildToParentCR, findChildFromParentById, removeChildFromParentCR, replaceChildFromParent } from './treeChildCRUD';
-
-type CUDFromRootFn = <T extends Tree>(upperTree: T, lowerTree: T) => T;
+import { addChildToParent, removeChildFromParentCR, replaceChildFromParent } from './treeChildCRUD';
 
 export const addTreeToUpper = <T extends Tree>(upperTrees: T | T[], lowerTree: T): T | T[] => {
   const trees = _.concat([], _.cloneDeep(upperTrees));
@@ -70,16 +67,33 @@ export const replaceTreeFromUpper = <T extends Tree>(upperTrees: T | T[], lowerT
   );
 }
 
-// export const removeTreeFromUpper: CUDFromRootFn = (upperTree, lowerTree) => pipe(
-//   O.fromNullableK(findTreeFromUpper)(upperTree, getTreePathArray(lowerTree.path)),
-//   O.match(
-//     () => upperTree,
-//     (parentTree) => pipe(
-//       parentTree,
-//       removeChildFromParentCR(lowerTree),
-//       replaceTreeFromUpperCL(upperTree),
-//     )
-//   )
-// );
+export const removeTreeFromUpper = <T extends Tree>(upperTrees: T | T[], lowerTree: T) => {
+  const trees = _.concat([], _.cloneDeep(upperTrees));
+  const idx = trees.findIndex(tree => tree.id === lowerTree.id);
+
+  return pipe(
+    idx < 0,
+    B.match(
+      () => {
+        _.remove(trees, (_, i) => i === idx);
+        return Array.isArray(upperTrees) ? trees : trees[0];
+      },
+      () => {
+        const parentTreePath = getTreeParentPath(lowerTree);
+        return pipe(
+          O.fromNullableK(findTreeFromUpper)(trees, parentTreePath),
+          O.match(
+            () => Array.isArray(upperTrees) ? trees : trees[0],
+            (parentTree) => pipe(
+              parentTree,
+              removeChildFromParentCR(lowerTree),
+              replaceTreeFromUpperCL(trees),
+            ),
+          )
+        )
+      },
+    )    
+  )
+}
 
 const replaceTreeFromUpperCL = _.curry(replaceTreeFromUpper);
