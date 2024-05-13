@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { findTreeFromUpper, replaceTreeFromUpper } from "./treeCRUD";
+import { addTreeToUpper, findTreeFromUpper, replaceTreeFromUpper } from "./treeCRUD";
 import { MOCK_FLAT_TREES, MOCK_HIERARCHY_TREES, TREE_3, TREE_5, TREE_7, TREE_8, TREE_9 } from "./utils/mock/data";
 import { cloneDeep } from "lodash";
 import { getTreePathArray } from "./utils/tree/treeUtil";
@@ -27,42 +27,47 @@ describe("treeCRUD", () => {
     });
   });
 
-  // describe("addTreeToUpper", () => {
-  //   test("1 depth 추가", () => {
-  //     const targetTree = cloneDeep(NEW_TREE);
-  //     targetTree.treePath = "";
+  describe("addTreeToUpper", () => {
+    test("when parent tree is not found", () => {
+      const lowerTree: Tree = {
+        id: "NEW",
+        name: "NEW",
+        path: "NOT_EXISTS"
+      };
+      const result = addTreeToUpper(MOCK_HIERARCHY_TREES, lowerTree);
+      const expectValue: ReturnType<typeof addTreeToUpper> = _.concat(lowerTree, MOCK_HIERARCHY_TREES);
+      expect(result).toStrictEqual(expectValue);
+    });
 
-  //     const res = addTreeToUpper(MOCK_TREE_DATA, targetTree);
-  //     const addedTree = res.treeChildren?.find(child => child.treeId === targetTree.treeId);
+    test("when parent tree is found (1)", () => {
+      const lowerTree: Tree = {
+        id: "NEW",
+        name: "NEW",
+        path: "6|NEW"
+      };
+      const result = addTreeToUpper(MOCK_HIERARCHY_TREES, lowerTree);
+      const expectValue: ReturnType<typeof addTreeToUpper> = _.cloneDeep(MOCK_HIERARCHY_TREES);
+      expectValue[2].children?.unshift(lowerTree);
+      expect(result).toStrictEqual(expectValue);
+    });
 
-  //     expect(addedTree).toEqual(targetTree);
-  //   });
-
-  //   test("n depth 추가", () => {
-  //     const targetTree = cloneDeep(NEW_TREE);
-  //     targetTree.treePath = "6|7";
-
-  //     const res = addTreeToUpper(MOCK_TREE_DATA, targetTree);
-
-  //     const [ parentId1, parentId2 ] = targetTree.treePath.split('|').map(Number);
-
-  //     const parentTree1 = res.treeChildren?.find(child => child.treeId === parentId1);
-  //     const parentTree2 = parentTree1?.treeChildren?.find(child => child.treeId === parentId2);
-  //     const addedTree = parentTree2?.treeChildren?.find(child => child.treeId === targetTree.treeId);
-
-  //     expect(addedTree).toEqual(targetTree);
-  //   });
-
-  //   test("parent 트리를 찾지 못할 경우 root 트리에 추가", () => {
-  //     const targetTree = cloneDeep(NEW_TREE);
-  //     targetTree.treePath = "-10";
-
-  //     const res = addTreeToUpper(MOCK_TREE_DATA, targetTree);
-  //     const addedTree = res.treeChildren?.find(child => child.treeId === targetTree.treeId);
-
-  //     expect(addedTree).toEqual(targetTree);
-  //   });
-  // });
+    test("when parent tree is found (1)", () => {
+      const lowerTree: Tree = {
+        id: "NEW",
+        name: "NEW",
+        path: "6|7|NEW"
+      };
+      const result = addTreeToUpper(MOCK_HIERARCHY_TREES, lowerTree);
+      const expectValue: ReturnType<typeof addTreeToUpper> = _.cloneDeep(MOCK_HIERARCHY_TREES);
+      expectValue[2].children = [
+        {
+          ...TREE_7,
+          children: [lowerTree, TREE_8, TREE_9]
+        }
+      ];
+      expect(result).toStrictEqual(expectValue);
+    });
+  });
 
   describe("replaceTreeFromUpper", () => {
     test("when upperTrees' depth is same with lowerTree's", () => {

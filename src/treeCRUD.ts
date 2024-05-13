@@ -5,17 +5,22 @@ import * as O from 'fp-ts/Option'
 import * as E from 'fp-ts/Either'
 import * as B from 'fp-ts/boolean'
 import { pipe } from 'fp-ts/function'
-import { addChildToParentCR, findChildFromParentById, removeChildFromParentCR, replaceChildFromParent } from './treeChildCRUD';
+import { addChildToParent, addChildToParentCR, findChildFromParentById, removeChildFromParentCR, replaceChildFromParent } from './treeChildCRUD';
 
 type CUDFromRootFn = <T extends Tree>(upperTree: T, lowerTree: T) => T;
 
-// export const addTreeToUpper: CUDFromRootFn = (upperTree, lowerTree) => pipe(
-//   O.fromNullableK(findTreeFromUpper)(upperTree, getTreePathArray(lowerTree.path)),
-//   E.fromOption(() => upperTree),
-//   E.toUnion,
-//   addChildToParentCR(lowerTree),
-//   replaceTreeFromUpperCL(upperTree),
-// );
+export const addTreeToUpper = <T extends Tree>(upperTrees: T | T[], lowerTree: T): T | T[] => {
+  const trees = _.concat([], _.cloneDeep(upperTrees));
+  const parentTree = findTreeFromUpper(trees, getTreeParentPath(lowerTree));
+
+  if (parentTree) {
+    const p = addChildToParent(parentTree, lowerTree);
+    const r = replaceTreeFromUpper(trees, p);
+    return Array.isArray(upperTrees) ? r : _.concat([], r)[0];
+  } else {
+    return Array.isArray(upperTrees) ? _.concat(trees, lowerTree).sort(sortingTreeByTreeName) : addChildToParent(trees[0], lowerTree);
+  }
+}
 
 export const findTreeFromUpper = <T extends Tree>(upperTrees: T | T[], path: string): T | undefined => {
   const trees = _.concat([], upperTrees);
